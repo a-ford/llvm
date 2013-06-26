@@ -540,6 +540,9 @@ module LLVM.FFI.Core
     , getUser
     , isUsedInBasicBlock
 
+    -- ** Initialize
+    , passRegistryRef
+
     ) where
 import Data.Typeable(Typeable)
 import Foreign.C.String (CString)
@@ -1422,6 +1425,10 @@ data PassManager
     deriving (Typeable)
 type PassManagerRef = Ptr PassManager
 
+data PassRegistry
+    deriving (Typeable)
+type PassRegisterRef = Ptr PassRegistry
+
 data OpaqueUse
     deriving (Typeable)
 type UseRef = Ptr OpaqueUse
@@ -1813,3 +1820,8 @@ foreign import ccall unsafe "LLVMUnionType" unionType
 foreign import ccall unsafe "LLVMUnionTypeInContext" unionTypeInContext
     :: ContextRef -> (Ptr TypeRef) -> CUInt -> IO TypeRef
 -}
+
+foreign import ccall unsafe "LLVMInitializeCore" initializeCore
+    :: PassRegistryRef -> IO ()
+foreign import ccall unsafe "LLVMGetGlobalPassRegistry" getGlobalPassRegistry
+    :: IO PassRegistryRef 
