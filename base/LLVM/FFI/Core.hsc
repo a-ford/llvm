@@ -541,7 +541,8 @@ module LLVM.FFI.Core
     , isUsedInBasicBlock
 
     -- ** Initialize
-    , passRegistryRef
+    , PassRegistry
+    , PassRegistryRef
 
     ) where
 import Data.Typeable(Typeable)

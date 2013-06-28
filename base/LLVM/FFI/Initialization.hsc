@@ -1,37 +1,31 @@
-{-# LANGUAGE CPP, ForeignFunctionInterface, EmptyDataDecls #-}
+{-# LANGUAGE CPP, ForeignFunctionInterface #-}
 
 module LLVM.FFI.Initialization where
-import Foreign.C.String(CString)
-#if __GLASGOW_HASKELL__ >= 704
-import Foreign.C.Types(CInt(..))
-#else
-import Foreign.C.Types(CInt)
-#endif
 import Foreign.Ptr(Ptr)
 
 import LLVM.FFI.Core
 
 foreign import ccall unsafe "LLVMInitializeCore" initializeCore
     :: PassRegistryRef -> IO ()
-foreign import ccall unsafe "LLVMInitializeTransformUtils" InitializeTransformUtils
+foreign import ccall unsafe "LLVMInitializeTransformUtils" initializeTransformUtils
     :: PassRegistryRef -> IO ()
-foreign import ccall unsafe "LLVMInitializeScalarOpts" InitializeScalarOpts
+foreign import ccall unsafe "LLVMInitializeScalarOpts" initializeScalarOpts
     :: PassRegistryRef -> IO ()
-foreign import ccall unsafe "LLVMInitializeObjCARCOpts" InitializeObjCARCOpts
+foreign import ccall unsafe "LLVMInitializeObjCARCOpts" initializeObjCARCOpts
     :: PassRegistryRef -> IO ()
-foreign import ccall unsafe "LLVMInitializeVectorization" InitializeVectorization
+foreign import ccall unsafe "LLVMInitializeVectorization" initializeVectorization
     :: PassRegistryRef -> IO ()
-foreign import ccall unsafe "LLVMInitializeInstCombine" InitializeInstCombine
+foreign import ccall unsafe "LLVMInitializeInstCombine" initializeInstCombine
     :: PassRegistryRef -> IO ()
-foreign import ccall unsafe "LLVMInitializeIPO" InitializeIPO
+foreign import ccall unsafe "LLVMInitializeIPO" initializeIPO
     :: PassRegistryRef -> IO ()
-foreign import ccall unsafe "LLVMInitializeInstrumentation" InitializeInstrumentation
+foreign import ccall unsafe "LLVMInitializeInstrumentation" initializeInstrumentation
     :: PassRegistryRef -> IO ()
-foreign import ccall unsafe "LLVMInitializeAnalysis" InitializeAnalysis
+foreign import ccall unsafe "LLVMInitializeAnalysis" initializeAnalysis
     :: PassRegistryRef -> IO ()
-foreign import ccall unsafe "LLVMInitializeIPA" InitializeIPA
+foreign import ccall unsafe "LLVMInitializeIPA" initializeIPA
     :: PassRegistryRef -> IO ()
-foreign import ccall unsafe "LLVMInitializeCodeGen" InitializeCodeGen
+foreign import ccall unsafe "LLVMInitializeCodeGen" initializeCodeGen
     :: PassRegistryRef -> IO ()
-foreign import ccall unsafe "LLVMInitializeTarget" InitializeTarget
+foreign import ccall unsafe "LLVMInitializeTarget" initializeTarget
     :: PassRegistryRef -> IO ()
