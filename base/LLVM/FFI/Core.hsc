@@ -773,8 +773,8 @@ fromCallingConvention :: CallingConvention -> CUInt
 fromCallingConvention C = (#const LLVMCCallConv)
 fromCallingConvention Fast = (#const LLVMFastCallConv)
 fromCallingConvention Cold = (#const LLVMColdCallConv)
-fromCallingConvention X86StdCall = (#const LLVMX86FastcallCallConv)
-fromCallingConvention X86FastCall = (#const LLVMX86StdcallCallConv)
+fromCallingConvention X86StdCall = (#const LLVMX86StdcallCallConv)
+fromCallingConvention X86FastCall = (#const LLVMX86FastcallCallConv)
 fromCallingConvention GHC = 10
 
 toCallingConvention :: CUInt -> CallingConvention
@@ -1279,6 +1279,7 @@ foreign import ccall unsafe "LLVMGetInstructionCallConv" getInstructionCallConv
 foreign import ccall unsafe "LLVMSetInstructionCallConv" setInstructionCallConv
     :: ValueRef -> CUInt -> IO ()
 
+-- takes element type ptr, element count, packed bool
 foreign import ccall unsafe "LLVMStructType" structType
     :: Ptr TypeRef -> CUInt -> CInt -> TypeRef
 foreign import ccall unsafe "LLVMCountStructElementTypes"
@@ -1373,6 +1374,7 @@ data Attribute
     | NoRedZoneAttribute
     | NoImplicitFloatAttribute
     | NakedAttribute
+    | InlineHintAttribute
     deriving (Show, Eq, Ord, Enum, Bounded, Typeable)
 
 fromAttribute :: Attribute -> CAttribute
@@ -1396,6 +1398,7 @@ fromAttribute NoCaptureAttribute = (#const LLVMNoCaptureAttribute)
 fromAttribute NoRedZoneAttribute = (#const LLVMNoRedZoneAttribute)
 fromAttribute NoImplicitFloatAttribute = (#const LLVMNoImplicitFloatAttribute)
 fromAttribute NakedAttribute = (#const LLVMNakedAttribute)
+fromAttribute InlineHintAttribute = (#const InlineHintAttribute)
 
 toAttribute :: CAttribute -> Attribute
 toAttribute c | c == (#const LLVMZExtAttribute) = ZExtAttribute
@@ -1418,6 +1421,7 @@ toAttribute c | c == (#const LLVMNoCaptureAttribute) = NoCaptureAttribute
 toAttribute c | c == (#const LLVMNoRedZoneAttribute) = NoRedZoneAttribute
 toAttribute c | c == (#const LLVMNoImplicitFloatAttribute) = NoImplicitFloatAttribute
 toAttribute c | c == (#const LLVMNakedAttribute) = NakedAttribute
+toAttribute c | c == (#const LLVMInlineHintAttribute) = InlineHintAttribute
 toAttribute _ = error "toAttribute: bad value"
 
 type CAttribute = CInt

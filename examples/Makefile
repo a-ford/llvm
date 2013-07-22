@@ -1,5 +1,6 @@
 ghc := ghc
-ghcflags := -Wall -optl -w
+ghcflags := -Wall -optl -w -fllvm -keep-llvm-files
+#-fllvm -keep-llvm-files
 # -DHAS_GETPOINTERTOGLOBAL=1
 examples := HelloJIT Fibonacci BrainF Vector Array DotProd Arith Align Struct Varargs List CallConv
 

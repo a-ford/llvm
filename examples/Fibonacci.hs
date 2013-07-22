@@ -27,8 +27,8 @@ main = do
     fns <- defineModule m buildMod
 
     -- Show the code for the two functions, just for fun.
-    --dumpValue $ mfib fns
-    --dumpValue $ mplus fns
+    dumpValue $ mfib fns
+    dumpValue $ mplus fns
     -- Write the code to a file for later perusal.
     -- Can be disassembled with llvm-dis.
     writeBitcodeToFile "Fibonacci.bc" m
@@ -46,6 +46,7 @@ main = do
     -- Run fib for the arguments.
     forM_ args' $ \num -> do
         putStrLn $ "fib " ++ num ++ " = " ++ show (fib (read num))
+
     return ()
 
 buildMod :: CodeGenModule Mod
