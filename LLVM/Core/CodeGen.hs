@@ -102,6 +102,7 @@ instance IsConst Int32  where constOf = constI
 instance IsConst Int64  where constOf = constI
 instance IsConst Float  where constOf = constF
 instance IsConst Double where constOf = constF
+instance IsConst (IsConst a) where constOf = id
 --instance IsConst FP128  where constOf = constF
 
 constOfPtr :: (IsType a) =>

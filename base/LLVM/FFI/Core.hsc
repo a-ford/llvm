@@ -1830,3 +1830,63 @@ foreign import ccall unsafe "LLVMInitializeCore" initializeCore
     :: PassRegistryRef -> IO ()
 foreign import ccall unsafe "LLVMGetGlobalPassRegistry" getGlobalPassRegistry
     :: IO PassRegistryRef 
+
+data AtomicOrdering
+    = AtomicOrderingNotAtomic
+    | AtomicOrderingUnordered
+    | AtomicOrderingMonotonic
+    | AtomicOrderingAcquire
+    | AtomicOrderingRelease
+    | AtomicOrderingAcquireRelease
+    | AtomicOrderingSequentiallyConsistent
+      deriving (Show, Eq, Ord, Enum, Typeable)
+
+data AtomicRMWBinOp
+    = AtomicRMWBinOpXchg
+    | AtomicRMWBinOpAdd
+    | AtomicRMWBinOpSub
+    | AtomicRMWBinOpAnd
+    | AtomicRMWBinOpNand
+    | AtomicRMWBinOpOr
+    | AtomicRMWBinOpXor
+    | AtomicRMWBinOpMax
+    | AtomicRMWBinOpMin
+    | AtomicRMWBinOpUMax
+    | AtomicRMWBinOpUMin
+      deriving (Show, Eq, Ord, Enum, Typeable)
+
+toAtomicOrdering :: CUInt -> MetadataKind
+toAtomicOrdering c = toEnum $ fromIntegral c
+
+fromAtomicOrdering :: AtomicOrdering -> CUInt
+fromAtomicOrdering o = fromIntegral $ fromEnum o
+
+fromAtomicRMWBinOp :: AtomicRMWBinOp -> CUInt
+fromAtomicRMWBinOp AtomicRMWBinOpXchg = (#const LLVMAtomicRMWBinOpXchg)
+fromAtomicRMWBinOp AtomicRMWBinOpAdd  = (#const LLVMAtomicRMWBinOpAdd)
+fromAtomicRMWBinOp AtomicRMWBinOpSub  = (#const LLVMAtomicRMWBinOpSub)
+fromAtomicRMWBinOp AtomicRMWBinOpAnd  = (#const LLVMAtomicRMWBinOpAnd)
+fromAtomicRMWBinOp AtomicRMWBinOpNand = (#const LLVMAtomicRMWBinOpNand)
+fromAtomicRMWBinOp AtomicRMWBinOpOr   = (#const LLVMAtomicRMWBinOpOr)
+fromAtomicRMWBinOp AtomicRMWBinOpXor  = (#const LLVMAtomicRMWBinOpXor)
+fromAtomicRMWBinOp AtomicRMWBinOpMax  = (#const LLVMAtomicRMWBinOpMax)
+fromAtomicRMWBinOp AtomicRMWBinOpMin  = (#const LLVMAtomicRMWBinOpMin)
+fromAtomicRMWBinOp AtomicRMWBinOpUMax = (#const LLVMAtomicRMWBinOpUMax)
+fromAtomicRMWBinOp AtomicRMWBinOpUMin = (#const LLVMAtomicRMWBinOpUMin)
+
+toAtomicRMWBinOp :: CUInt -> AtomicRMWBinOp
+toAtomicRMWBinOp c | c == (#const LLVMAtomicRMWBinOpXchg) = AtomicRMWBinOpXchg
+toAtomicRMWBinOp c | c == (#const LLVMAtomicRMWBinOpAdd)  = AtomicRMWBinOpAdd
+toAtomicRMWBinOp c | c == (#const LLVMAtomicRMWBinOpSub)  = AtomicRMWBinOpSub
+toAtomicRMWBinOp c | c == (#const LLVMAtomicRMWBinOpAnd)  = AtomicRMWBinOpAnd
+toAtomicRMWBinOp c | c == (#const LLVMAtomicRMWBinOpNand) = AtomicRMWBinOpNand
+toAtomicRMWBinOp c | c == (#const LLVMAtomicRMWBinOpOr)   = AtomicRMWBinOpOr
+toAtomicRMWBinOp c | c == (#const LLVMAtomicRMWBinOpXor)  = AtomicRMWBinOpXor
+toAtomicRMWBinOp c | c == (#const LLVMAtomicRMWBinOpMax)  = AtomicRMWBinOpMax
+toAtomicRMWBinOp c | c == (#const LLVMAtomicRMWBinOpMin)  = AtomicRMWBinOpMin
+toAtomicRMWBinOp c | c == (#const LLVMAtomicRMWBinOpUMax) = AtomicRMWBinOpUMax
+toAtomicRMWBinOp c | c == (#const LLVMAtomicRMWBinOpUMin) = AtomicRMWBinOpUMin
+toAtomicRMWBinOp _ = error "toAtomicRMWBinOp: bad value"
+
+foreign import ccall unsafe "LLVMBuildAtomicRMW" buildAtomicRMW
+    :: BuilderRef -> CUInt -> ValueRef -> ValueRef -> CUInt -> CUInt

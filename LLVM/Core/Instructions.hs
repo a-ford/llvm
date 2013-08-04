@@ -57,7 +57,8 @@ module LLVM.Core.Instructions(
     Terminate,
     Ret, CallArgs, ABinOp, CmpOp, FunctionArgs, FunctionRet, IsConst,
     AllocArg,
-    GetElementPtr, IsIndexArg, GetValue
+    GetElementPtr, IsIndexArg, GetValue,
+    CallingConvention
     ) where
 import Prelude hiding (and, or)
 import Data.Typeable
@@ -89,6 +90,8 @@ import qualified LLVM.Core.Util as U
 -- Add rest of instructions
 -- Use Terminate to ensure bb termination (how?)
 -- more intrinsics are needed to, e.g., create an empty vector
+
+type CallingConvention = FFI.CallingConvention
 
 data ArgDesc = AV String | AI Int | AL String | AE
 
@@ -831,7 +834,7 @@ invoke (BasicBlock norm) (BasicBlock expt) (Value f) =
 -- As LLVM itself defines, if the calling conventions of the calling
 -- /instruction/ and the function being /called/ are different, undefined
 -- behavior results.
-callWithConv :: (CallArgs f g r) => FFI.CallingConvention -> Function f -> g
+callWithConv :: (CallArgs f g r) => CallingConvention -> Function f -> g
 callWithConv cc (Value f) = doCall (U.makeCallWithCc cc f) [] (undefined :: f)
 
 -- | Call a function with exception handling.
@@ -840,7 +843,7 @@ callWithConv cc (Value f) = doCall (U.makeCallWithCc cc f) [] (undefined :: f)
 -- /instruction/ and the function being /called/ are different, undefined
 -- behavior results.
 invokeWithConv :: (CallArgs f g r)
-               => FFI.CallingConvention -- ^Calling convention
+               => CallingConvention -- ^Calling convention
                -> BasicBlock         -- ^Normal return point.
                -> BasicBlock         -- ^Exception return point.
                -> Function f         -- ^Function to call.
